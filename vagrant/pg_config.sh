@@ -2,6 +2,26 @@ apt-get -qqy update
 apt-get -qqy install postgresql python-psycopg2
 apt-get -qqy install python-flask python-sqlalchemy
 apt-get -qqy install python-pip
+
+# Install Git
+# -----------
+apt-get install -y git-core
+
+# Install Node js
+# ---------------
+apt-get install -y python-software-properties python g++ make
+add-apt-repository -y ppa:chris-lea/node.js
+apt-get update
+apt-get install -y nodejs
+
+# Upgrade NPM
+# -----------
+npm update -g npm
+
+# Install Bower
+# -------------
+npm install -g bower
+
 pip install bleach
 pip install oauth2client
 pip install requests
@@ -10,6 +30,9 @@ pip install redis
 pip install passlib
 pip install itsdangerous
 pip install flask-httpauth
+pip install flask_sqlalchemy
+
+
 su postgres -c 'createuser -dRS vagrant'
 su vagrant -c 'createdb'
 su vagrant -c 'createdb forum'
