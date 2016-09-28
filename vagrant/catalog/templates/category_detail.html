@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h2 class="pull-left">
+  {{ category.title }}<br/>
+  <small>{{ category.description }}</small>
+</h2>
+<a class="btn btn-primary pull-right" href="/categories/{{ category.id }}/add">Add Item</a>
+<a class="btn btn-primary pull-right" href="/categories/{{ category.id }}/update">Edit</a>
+<table class="table">
+  <thead>
+    <th>Item</th>
+    <th>Action</th>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr>
+      <td>{{ item.title }}</td>
+      <td>
+        <a href="/categories/{{ category.id }}/{{ item.id }}">Edit</a> |
+        <a href="/categories/{{ category.id }}/{{ item.id }}/delete">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
