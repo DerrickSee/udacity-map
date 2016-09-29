@@ -31,7 +31,7 @@ pip install passlib
 pip install itsdangerous
 pip install flask-httpauth
 pip install flask_sqlalchemy
-
+pip install flask-login
 
 
 su postgres -c 'createuser -dRS vagrant'

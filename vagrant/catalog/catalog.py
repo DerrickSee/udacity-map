@@ -1,25 +1,41 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, logout_user, login_required
 from datetime import datetime
+from werkzeug.security import generate_password_hash, \
+     check_password_hash
 
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///catalog.sqlite3'
+app.secret_key = 'super secret key'
 db = SQLAlchemy(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
-    email = db.Column(db.String(120), unique=True)
+    password = db.Column(db.String(80))
+    is_authenticated = db.Column(db.Boolean, default=True)
+    is_active = db.Column(db.Boolean, default=True)
+    is_anonymous = db.Column(db.Boolean, default=False)
 
-    def __init__(self, username, email):
+    def __init__(self, username, password):
         self.username = username
-        self.email = email
+        self.set_password(password)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+    def get_id(self):
+        return self.id
 
 
 class Category(db.Model):
@@ -61,9 +77,72 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+
 @app.route('/')
 def index():
     return render_template('index.html', categories=Category.query.all())
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    # Here we use a class of some kind to represent and validate our
+    # client-side form data. For example, WTForms is a library that will
+    # handle this for us, and we use a custom LoginForm to validate.
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        password2 = request.form['password2']
+        if User.query.filter_by(username=username).first():
+            flash('User already exists. Please use another username.')
+        elif username and password == password2:
+            user = User(username, password)
+            db.session.add(user)
+            db.session.commit()
+            login_user(user)
+            flash('You have been registered successfully.')
+        else:
+            flash('Please make sure password is the same.')
+        # permission to access the `next` url
+        return redirect('/')
+    return render_template('register.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # Here we use a class of some kind to represent and validate our
+    # client-side form data. For example, WTForms is a library that will
+    # handle this for us, and we use a custom LoginForm to validate.
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user and user.check_password(password):
+        # Login and validate the user.
+        # user should be an instance of your `User` class
+            login_user(user)
+            flash('Logged in successfully.')
+        else:
+            flash('Login fail. Please make sure your username and password is correct.')
+
+        # next = request.args.get('next')
+        # next_is_valid should check if the user has valid
+        # permission to access the `next` url
+        return redirect('/')
+    return render_template('login.html')
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
 
 
 @app.route('/categories/create/', methods=['GET', 'POST'])
