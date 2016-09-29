@@ -19,7 +19,6 @@ npm update -g npm
 # Install Bower
 # -------------
 npm install -g bower
-bower install
 
 pip install flask
 pip install bleach
