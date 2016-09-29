@@ -33,6 +33,8 @@ pip install flask_sqlalchemy
 pip install Flask-Social
 pip install flask-security
 pip install python-twitter
+pip install flask-marshmallow
+pip install marshmallow-sqlalchemy
 
 
 vagrantTip="[35m[1mThe shared directory is located at /vagrant\nTo access your shared files: cd /vagrant(B[m"

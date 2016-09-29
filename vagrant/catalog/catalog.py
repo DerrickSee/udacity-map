@@ -1,12 +1,15 @@
+from datetime import datetime
+from werkzeug import url_decode
+
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+     render_template, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.social import Social
 from flask.ext.social.datastore import SQLAlchemyConnectionDatastore
 from flask.ext.security import Security, SQLAlchemyUserDatastore, \
     UserMixin, RoleMixin, login_required, current_user
-from datetime import datetime
-from werkzeug import url_decode
+from flask_marshmallow import Marshmallow
+
 
 
 app = Flask(__name__)
@@ -21,6 +24,7 @@ app.config['SECURITY_POST_LOGIN_VIEW'] = 'index'
 app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 app.secret_key = 'super secret key'
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 
 class MethodRewriteMiddleware(object):
@@ -121,6 +125,18 @@ class Item(db.Model):
 
     def __repr__(self):
         return '<Item %r>' % self.title
+
+
+class ItemSchema(ma.ModelSchema):
+    class Meta:
+        model = Item
+
+
+class CategorySchema(ma.ModelSchema):
+    class Meta:
+        model = Category
+    items = ma.Nested(ItemSchema, many=True, exclude=('user',))
+
 
 
 class Connection(db.Model):
@@ -327,6 +343,14 @@ def item_delete(category_id, item_id):
             return redirect('/categories/%s' % category_id)
         return render_template('item_delete.html', **ctx)
     return abort(404)
+
+
+@app.route('/api/catalog.json')
+def catalog_api():
+    categories = Category.query.all()
+    categories_schema = CategorySchema(many=True, exclude=('user',))
+    result = categories_schema.dump(categories)
+    return jsonify(result.data)
 
 
 if __name__ == "__main__":

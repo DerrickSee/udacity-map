@@ -30,3 +30,8 @@ db.create_all()
 python catalog.py
 ```
 5. Visit application at http://localhost:5000 on a browser to view application.
+
+
+Catalog API
+-----------
+To access catalog json endpoint, go to http://localhost:5000/api/catalog.json
