@@ -5,21 +5,20 @@
   {{ category.title }}<br/>
   <small>{{ category.description }}</small>
 </h2>
-<a class="btn btn-primary pull-right" href="/categories/{{ category.id }}/add">Add Item</a>
-<a class="btn btn-primary pull-right" href="/categories/{{ category.id }}/update">Edit</a>
+<div class="pull-right">
+  <a class="btn btn-primary" href="/categories/{{ category.id }}/add">Add Item</a>
+  <a class="btn btn-primary" href="/categories/{{ category.id }}/update">Edit</a>
+  <a class="btn btn-danger" href="/categories/{{ category.id }}/delete">Delete</a>
+</div>
+
 <table class="table">
   <thead>
     <th>Item</th>
-    <th>Action</th>
   </thead>
   <tbody>
     {% for item in items %}
     <tr>
-      <td>{{ item.title }}</td>
-      <td>
-        <a href="/categories/{{ category.id }}/{{ item.id }}">Edit</a> |
-        <a href="/categories/{{ category.id }}/{{ item.id }}/delete">Delete</a>
-      </td>
+      <td><a href="/categories/{{ category.id }}/{{ item.id }}">{{ item.title }}</a></td>
     </tr>
     {% endfor %}
   </tbody>

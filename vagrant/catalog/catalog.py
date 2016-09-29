@@ -113,6 +113,28 @@ def category_update(category_id):
     return abort(404)
 
 
+@app.route('/categories/<int:category_id>/delete', methods=['GET', 'POST'])
+def category_delete(category_id):
+    category = Category.query.filter_by(id=category_id).first()
+    if category:
+        ctx = {
+            'category': category,
+            'categories': Category.query.all(),
+        }
+        if request.method == 'POST':
+            title = request.form['title']
+            description = request.form['description']
+            if title and description:
+                category.title = title
+                category.description = description
+                db.session.commit()
+                return redirect('/categories/%s' % category_id)
+            else:
+                ctx.update({'error': "Please ensure all fields are filled."})
+        return render_template('category_delete.html', **ctx)
+    return abort(404)
+
+
 @app.route('/categories/<int:category_id>/add', methods=['GET', 'POST'])
 def item_create(category_id):
     category = Category.query.filter_by(id=category_id).first()
@@ -134,7 +156,22 @@ def item_create(category_id):
         return render_template('item_form.html', **ctx)
     return abort(404)
 
-@app.route('/categories/<int:category_id>/<int:item_id>', methods=['GET', 'POST'])
+
+@app.route('/categories/<int:category_id>/<int:item_id>', methods=['GET'])
+def item_detail(category_id, item_id):
+    category = Category.query.filter_by(id=category_id).first()
+    item = Item.query.filter_by(id=item_id).first()
+    if category and item:
+        ctx = {
+            'category': category,
+            'categories': Category.query.all(),
+            'item': item
+        }
+        return render_template('item_detail.html', **ctx)
+    return abort(404)
+
+
+@app.route('/categories/<int:category_id>/<int:item_id>/update', methods=['GET', 'POST'])
 def item_update(category_id, item_id):
     category = Category.query.filter_by(id=category_id).first()
     item = Item.query.filter_by(id=item_id).first()
@@ -151,7 +188,7 @@ def item_update(category_id, item_id):
                 item.title = title
                 item.description = description
                 db.session.commit()
-                return redirect('/categories/%s' % category_id)
+                return redirect('/categories/%s/%s' % (category_id, item_id))
             else:
                 ctx.update({'error': "Please ensure all fields are filled."})
         return render_template('item_form.html', **ctx)
