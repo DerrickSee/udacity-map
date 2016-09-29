@@ -1,0 +1,39 @@
+{% extends "security/base.html" %}
+
+{% block content %}
+{% from "security/_macros.html" import render_field_with_errors, render_field %}
+{% include "security/_messages.html" %}
+<h1>Register</h1>
+<form action="{{ url_for_security('register') }}" method="POST" name="register_user_form">
+  {{ register_user_form.hidden_tag() }}
+  <div class="form-group">
+    <label>Email</label>
+    <input class="form-control" name="email" type="email" value="{{ register_user_form.email.data|default:'' }}" required>
+    {% if register_user_form.email.errors %}
+      {% for error in register_user_form.email.errors %}
+        <span class="help-text">{{ error }}</span>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input class="form-control" name="password" type="password" required>
+    {% if register_user_form.password.errors %}
+      {% for error in register_user_form.password.errors %}
+        <span class="help-text">{{ error }}</span>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label>Retype Password</label>
+    <input class="form-control" name="password_confirm" type="password" required>
+    {% if register_user_form.password_confirm.errors %}
+      {% for error in register_user_form.password_confirm.errors %}
+        <span class="help-text">{{ error }}</span>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <button class="btn btn-success" type="submit">Register</button>
+  <a class="btn btn-default" href="/">Back to Home</a>
+</form>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% macro show_provider_button(provider_id, display_name, conn) %}
+    {% if conn %}
+    <form id="disconnect" action="{{ url_for('social.remove_connection', provider_id=conn.provider_id, provider_user_id=conn.provider_user_id) }}?__METHOD_OVERRIDE__=DELETE" method="POST">
+      <a class="btn btn-social btn-{{ display_name|lower }}" onclick="$('#disconnect').submit();">
+        <span class="fa fa-twitter"></span> Disconnect {{ display_name }}
+      </a>
+    </form>
+    {% else %}
+    <form action="{{ url_for('social.connect', provider_id=provider_id) }}" method="POST">
+      <a class="btn btn-social btn-{{ display_name|lower }}" onclick="$(this).closest('form').submit();">
+        <span class="fa fa-twitter"></span> Connect {{ display_name }}
+      </a>
+    </form>
+    {% endif %}
+{% endmacro %}
+
+{{ show_provider_button('twitter', 'Twitter', twitter_conn) }}
+
+{% endblock %}

@@ -6,9 +6,11 @@
   <small>{{ category.description }}</small>
 </h2>
 <div class="pull-right">
+  {% if current_user == category.user %}
   <a class="btn btn-primary" href="/categories/{{ category.id }}/add">Add Item</a>
   <a class="btn btn-primary" href="/categories/{{ category.id }}/update">Edit</a>
   <a class="btn btn-danger" href="/categories/{{ category.id }}/delete">Delete</a>
+  {% endif %}
 </div>
 
 <table class="table">
@@ -19,6 +21,10 @@
     {% for item in items %}
     <tr>
       <td><a href="/categories/{{ category.id }}/{{ item.id }}">{{ item.title }}</a></td>
+    </tr>
+    {% else %}
+    <tr>
+      <td>There are no items in this category.</td>
     </tr>
     {% endfor %}
   </tbody>
