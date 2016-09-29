@@ -48,3 +48,4 @@ doc/
 
 bower_components/
 node_modules/
+*.sqlite3
