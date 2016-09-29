@@ -14,8 +14,9 @@ Run Application Locally
 ```
 vagrant up
 ```
-2. Initiate bower install to download bower components
+2. Connect to vagrant box and initiate bower install to download bower components
 ```
+vagrant ssh
 cd /vagrant/catalog
 bower install
 ```
