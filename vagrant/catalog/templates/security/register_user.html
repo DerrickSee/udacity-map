@@ -8,7 +8,7 @@
   {{ register_user_form.hidden_tag() }}
   <div class="form-group">
     <label>Email</label>
-    <input class="form-control" name="email" type="email" value="{{ register_user_form.email.data|default:'' }}" required>
+    <input class="form-control" name="email" type="email" {% if register_user_form.email.data %}value="{{ register_user_form.email.data }}"{% endif %} required>
     {% if register_user_form.email.errors %}
       {% for error in register_user_form.email.errors %}
         <span class="help-text">{{ error }}</span>
