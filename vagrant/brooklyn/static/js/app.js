@@ -142,11 +142,17 @@ function AppViewModel() {
   self.filteredPlaces = ko.computed(function() {
     var filter = self.filter().toLowerCase();
     if (!filter) {
-        return self.places();
+      self.places().forEach(function(elem){
+        elem.marker.setVisible(true);
+      })
+      return self.places();
     } else {
-      return ko.utils.arrayFilter(self.places(), function(item) {
-        return stringStartsWith(item.name().toLowerCase(), filter);
+      var places = ko.utils.arrayFilter(self.places(), function(item) {
+        var p = stringStartsWith(item.name().toLowerCase(), filter);
+        item.marker.setVisible(p);
+        return p;
       });
+      return places
     }
   }, self);
 }
