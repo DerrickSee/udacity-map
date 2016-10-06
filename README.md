@@ -7,11 +7,14 @@ Dependencies
 ------------
 Vagrant is required. Installation details can be found at https://www.vagrantup.com/.
 
+Yelp API credentials is also required. Please register at https://www.yelp.com/developers/.
+
 
 Run Application Locally
 -----------------------
 1. Within the project directory, run vagrant.
 ```
+cd vagrant/
 vagrant up
 ```
 2. Connect to vagrant box and export your Yelp API Credentials
