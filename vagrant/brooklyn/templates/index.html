@@ -64,19 +64,11 @@
     <script type='text/javascript' src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js'></script>
     <script type='text/javascript' src="{{ url_for('static', filename='js/utils.js') }}"></script>
-    <script type='text/javascript' src="{{ url_for('static', filename='js/please-wait.min.js') }}"></script>
-    <script type="text/javascript">
-    var loading_screen = pleaseWait({
-      logo: "{{ url_for('static', filename='img/brooklyn.png') }}",
-      backgroundColor: '#1abc9c',
-      loadingHtml: '<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>'
-    });
-    </script>
-
-
     <script type='text/javascript' src="{{ url_for('static', filename='js/map.js') }}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDn36G-lqA-msCSKH3BPBDg7gVlvcOxSYY&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDn36G-lqA-msCSKH3BPBDg7gVlvcOxSYY&callback=initMap"></script>
+
     <script type='text/javascript' src="{{ url_for('static', filename='js/app.js') }}"></script>
+
 
     <script>
     $("#menu-toggle").click(function(e) {

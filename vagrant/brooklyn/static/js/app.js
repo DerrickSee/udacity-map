@@ -1,75 +1,129 @@
 var data = [
   {
     name: "Threes Brewing",
-    address: "333 Douglass St, Brooklyn, NY 11217",
-    yelpId: "threes-brewing-brooklyn"
+    yelpId: "threes-brewing-brooklyn",
+    position: {
+      lat: 40.679721,
+      lng: -73.982162
+    }
   },
   {
     name: "Freek's Mill",
-    address: "285 Nevins St, Brooklyn, NY 11217",
-    yelpId: "freeks-mill-gowanus"
+    yelpId: "freeks-mill-gowanus",
+    position: {
+      lat: 40.679565,
+      lng: -73.986824
+    }
   },
   {
     name: "Olmsted",
-    address: "659 Vanderbilt Ave, Brooklyn, NY 11238",
-    yelpId: "olmsted-brooklyn"
+    yelpId: "olmsted-brooklyn",
+    position: {
+      lat: 40.67713,
+      lng: -73.96869
+    }
   },
   {
     name: "Carla Hall's Southern Kitchen",
-    address: "115 Columbia St, Brooklyn, NY 11201",
-    yelpId: "carla-halls-southern-kitchen-brooklyn"
+    yelpId: "carla-halls-southern-kitchen-brooklyn",
+    position: {
+      lat: 40.687792,
+      lng: -74.0011473
+    }
   },
   {
     name: "Sunken Hundred",
-    address: "276 Smith St, Brooklyn, NY 11231",
-    yelpId: "sunken-hundred-brooklyn"
+    yelpId: "sunken-hundred-brooklyn",
+    position: {
+      lat: 40.68254,
+      lng: -73.99353
+    }
   }
 ]
 
 var id = 0;
+var infowindow = null;
 
 var Place = function(data) {
   var self = this;
   id += 1;
   self.id = id;
   self.name = ko.observable(data.name);
+  self.position = ko.observable(data.position);
   self.yelpId = ko.observable(data.yelpId);
-  self.contentString = ko.observable('<h5 id="firstHeading" class="firstHeading">' + data.name + '</h5>');
-  $.ajax({
-    url: "/places/" + self.yelpId(),
-    success: function(result) {
-      console.log(result)
-      self.contentString(self.contentString() +'<p>' + result.location.address1 + '<br/>');
-      self.contentString(self.contentString() +'Yelp Rating: ' + result.rating + '<br/>');
-      self.contentString(self.contentString() +'Price: ' + result.price + '</p>');
-      var marker = new google.maps.Marker({
-        map: map,
-        position: {
-          lat: result.coordinates.latitude,
-          lng: result.coordinates.longitude
+  self.dataRetrieved = ko.observable(false);
+  self.contentString = ko.observable('');
+  var marker = new google.maps.Marker({
+    map: map,
+    position: data.position
+  });
+  marker.addListener('click', function(e){
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function(){ marker.setAnimation(null); }, 1400);
+    if (infowindow) {
+        infowindow.close();
+    }
+    var header = '<h5>' + self.name() + '</h5>'
+    if (!self.dataRetrieved()) {
+      $.ajax({
+        url: "/places/" + self.yelpId(),
+        success: function(result) {
+          out = '<p>' + result.location.address1 + '<br/>';
+          out += 'Yelp Rating: ' + result.rating + '<br/>';
+          out += 'Price: ' + result.price + '</p>';
+          self.contentString(out);
+          self.dataRetrieved(true);
         }
-      });
-      marker.addListener('click', function(e){
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout(function(){ marker.setAnimation(null); }, 1400);
-        if (infowindow) {
-            infowindow.close();
-        }
-        infowindow = new google.maps.InfoWindow({content: self.contentString()});
+      }).fail(function(){
+        self.contentString('<p>Unable to load data from yelp. Try again later.</p>');
+      }).always(function(){
+        infowindow = new google.maps.InfoWindow({content: header + self.contentString()});
         infowindow.open(map, marker);
       });
-      self.marker = marker;
+    } else {
+      infowindow = new google.maps.InfoWindow({content: header + self.contentString()});
+      infowindow.open(map, marker);
+    }
 
-    }
-  }).done(function(){
-    if (self.id == 5) {
-      loading_screen.finish();
-    }
   });
+  self.marker = marker;
 }
 
+// self.contentString = ko.observable('');
+//   url: "/places/" + self.yelpId(),
+//   success: function(result) {
+//     console.log(result)
+//     self.contentString(self.contentString() +'<p>' + result.location.address1 + '<br/>');
+//     self.contentString(self.contentString() +'Yelp Rating: ' + result.rating + '<br/>');
+//     self.contentString(self.contentString() +'Price: ' + result.price + '</p>');
+//     var marker = new google.maps.Marker({
+//       map: map,
+//       position: {
+//         lat: result.coordinates.latitude,
+//         lng: result.coordinates.longitude
+//       }
+//     });
+//     marker.addListener('click', function(e){
+//       marker.setAnimation(google.maps.Animation.BOUNCE);
+//       setTimeout(function(){ marker.setAnimation(null); }, 1400);
+//       if (infowindow) {
+//           infowindow.close();
+//       }
+//       infowindow = new google.maps.InfoWindow({content: self.contentString()});
+//       infowindow.open(map, marker);
+//     });
+//     self.marker = marker;
+//   }
+// }).always(function(){
+//   if (self.id == 5) {
+//     loading_screen.finish();
+//   }
+// }).fail(function(){
+//   self.contentString(self.contentString() +'<p>Unable to load data from yelp. Try again later.</p>');
+// });
 
-var infowindow = null;
+
+
 
 function AppViewModel() {
   var self = this;
@@ -80,13 +134,7 @@ function AppViewModel() {
   })
 
   self.animateMarker = function(place){
-    place.marker.setAnimation(google.maps.Animation.BOUNCE);
-    setTimeout(function(){ place.marker.setAnimation(null); }, 1400);
-    if (infowindow) {
-        infowindow.close();
-    }
-    infowindow = new google.maps.InfoWindow({content: place.contentString()});
-    infowindow.open(map, place.marker);
+    google.maps.event.trigger(place.marker, 'click');
   }
 
   //filter the items using the filter text
