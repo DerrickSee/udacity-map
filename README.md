@@ -1,7 +1,7 @@
-Udacity Catalog App
+Udacity Map/Brooklyn App
 =============
 
-This is an application with basic authentication and the ability to CRUD categories and items.
+This is an application using Google Maps and Yelp API.
 
 Dependencies
 ------------
@@ -14,20 +14,17 @@ Run Application Locally
 ```
 vagrant up
 ```
-2. Connect to vagrant box and initiate bower install to download bower components
+2. Connect to vagrant box and export your Yelp API Credentials
 ```
 vagrant ssh
-cd /vagrant/catalog
-bower install
+export APP_ID = <YELP_APP_ID>
+export APP_SECRET = <YELP_APP_SECRET>
 ```
-3. Create tables in Database by in shell
-```python
-from catalog import db
-db.create_all()
-```
+
 4. Run Application
 ```
-python catalog.py
+cd /vagrant/brooklyn
+python brooklyn.py
 ```
 5. Visit application at http://localhost:5000 on a browser to view application.
 

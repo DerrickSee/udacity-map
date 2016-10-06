@@ -16,32 +16,8 @@ apt-get install -y nodejs
 # -----------
 npm update -g npm
 
-# Install Bower
-# -------------
-npm install -g bower
-
 pip install flask
-pip install bleach
-pip install oauth2client
-pip install requests
-pip install httplib2
-pip install redis
-pip install passlib
-pip install itsdangerous
-pip install flask-httpauth
-pip install flask_sqlalchemy
-pip install Flask-Social
-pip install flask-security
-pip install python-twitter
-pip install flask-marshmallow
-pip install marshmallow-sqlalchemy
-
+pip install git+https://github.com/dawran6/yelpy.git
 
 vagrantTip="[35m[1mThe shared directory is located at /vagrant\nTo access your shared files: cd /vagrant(B[m"
 echo -e $vagrantTip > /etc/motd
-
-wget http://download.redis.io/redis-stable.tar.gz
-tar xvzf redis-stable.tar.gz
-cd redis-stable
-make
-make install

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Brooklyn Restaurants</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/simple-sidebar.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/please-wait.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                  <input class="form-control" placeholder="Search..." id="search" data-bind="value: filter, valueUpdate: 'afterkeydown'">
+                </li>
+                <!-- ko foreach: filteredPlaces -->
+                <li>
+                    <a href="#" data-bind="text: name, click: $parent.animateMarker"></a>
+                </li>
+                <!-- /ko -->
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+          <div id="map"></div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script type='text/javascript' src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js'></script>
+    <script type='text/javascript' src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script type='text/javascript' src="{{ url_for('static', filename='js/please-wait.min.js') }}"></script>
+    <script type="text/javascript">
+    var loading_screen = pleaseWait({
+      logo: "{{ url_for('static', filename='img/brooklyn.png') }}",
+      backgroundColor: '#1abc9c',
+      loadingHtml: '<div class="spinner"><div class="rect1"></div><div class="rect2"></div><div class="rect3"></div><div class="rect4"></div><div class="rect5"></div></div>'
+    });
+    </script>
+
+
+    <script type='text/javascript' src="{{ url_for('static', filename='js/map.js') }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDn36G-lqA-msCSKH3BPBDg7gVlvcOxSYY&callback=initMap" async defer></script>
+    <script type='text/javascript' src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+
+</html>
