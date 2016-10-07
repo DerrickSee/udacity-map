@@ -20,8 +20,8 @@ vagrant up
 2. Connect to vagrant box and export your Yelp API Credentials
 ```
 vagrant ssh
-export APP_ID=<YELP_APP_ID>
-export APP_SECRET=<YELP_APP_SECRET>
+export APP_ID=1MzeDvwoIQJOVVpXJm6YJg
+export APP_SECRET=CTLK2bTCP16i4L4VghSikXQPldV5OUMYu8uSuCfXu1fpVCmxuWsCFXdzZemXcjL9
 ```
 
 4. Run Application
