@@ -89,41 +89,6 @@ var Place = function(data) {
   self.marker = marker;
 }
 
-// self.contentString = ko.observable('');
-//   url: "/places/" + self.yelpId(),
-//   success: function(result) {
-//     console.log(result)
-//     self.contentString(self.contentString() +'<p>' + result.location.address1 + '<br/>');
-//     self.contentString(self.contentString() +'Yelp Rating: ' + result.rating + '<br/>');
-//     self.contentString(self.contentString() +'Price: ' + result.price + '</p>');
-//     var marker = new google.maps.Marker({
-//       map: map,
-//       position: {
-//         lat: result.coordinates.latitude,
-//         lng: result.coordinates.longitude
-//       }
-//     });
-//     marker.addListener('click', function(e){
-//       marker.setAnimation(google.maps.Animation.BOUNCE);
-//       setTimeout(function(){ marker.setAnimation(null); }, 1400);
-//       if (infowindow) {
-//           infowindow.close();
-//       }
-//       infowindow = new google.maps.InfoWindow({content: self.contentString()});
-//       infowindow.open(map, marker);
-//     });
-//     self.marker = marker;
-//   }
-// }).always(function(){
-//   if (self.id == 5) {
-//     loading_screen.finish();
-//   }
-// }).fail(function(){
-//   self.contentString(self.contentString() +'<p>Unable to load data from yelp. Try again later.</p>');
-// });
-
-
-
 
 function AppViewModel() {
   var self = this;
@@ -157,4 +122,20 @@ function AppViewModel() {
   }, self);
 }
 
-ko.applyBindings(new AppViewModel());
+var map;
+
+function initMap() {
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 40.677183, lng: -73.982564},
+    zoom: 14
+  })
+
+  ko.applyBindings(new AppViewModel());
+};
+
+setTimeout(function() {
+  if(!window.google || !window.google.maps) {
+    window.alert("Google Maps API is currently not working. Try again later!");
+  }
+}, 5000);
