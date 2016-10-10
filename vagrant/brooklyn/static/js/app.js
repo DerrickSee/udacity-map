@@ -134,8 +134,6 @@ function initMap() {
   ko.applyBindings(new AppViewModel());
 };
 
-setTimeout(function() {
-  if(!window.google || !window.google.maps) {
-    window.alert("Google Maps API is currently not working. Try again later!");
-  }
-}, 5000);
+function googleError() {
+  $('#page-content-wrapper').html("<p>Google Maps API is currently not working. Try again later.</p>")
+}
